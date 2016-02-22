@@ -1,0 +1,55 @@
+<header class="hero-unit" id="banner">
+  <div class="container">
+    <h1>Nightlife Coordinator</h1>
+    <p class="lead">Check out who's going where!</p>
+  </div>
+</header>
+
+<div class="container main-section" ng-controller="MainController as main">
+  <input id="search-box" type="text" class="search-box" placeholder="Enter your location">{{main.getLastSearch()}}</input>
+  <label for="search-box"><span class="glyphicon glyphicon-search search-icon"></span></label>
+  <button class="search-submit" style='height: 35px; margin-top: 15px' ng-click='main.search()'>GO!</button>
+  <div class="row">
+    <div class="col-md-offset-2 col-md-8 col-md-offset-2">
+      <span class="glyphicon glyphicon-search search-icon search-spinner" ng-show="main.loading" style='background-color: #ebebeb; border-radius: 50%; padding: 10px; color: #4493b9; margin: auto; margin-left: 51.5%; margin-top: 30px;'></span>
+      <ul class='results' ng-hide='main.loading'>
+        <li ng-repeat='item in main.list'>
+          <div class='main'>
+            <div class='top'>
+              <img src='{{item.image_url}}' />
+              <div class="info">
+                <p class="title">{{item.name}}</p>
+                <p>{{item.location.display_address[0] + ", " + item.location.display_address[1]}}</p>
+                <p>{{item.display_phone}}</p>
+              </div>
+            </div>
+            <div class='bottom'>
+              <span ng-repeat="class in item.rating_class" class="{{class.class}}"></span>
+              <span class='review-number'>{{item.review_count + ' Reviews'}}</span>
+              <button id="{{item.id}}" class='going-button {{$index}}' style="font-size: 10pt; float: right;" ng-click="main.loggedInClick($event)" ng-show='main.isLoggedIn()'>{{item.attendence + ' Going'}}</button>
+              <button class='going-button' style='font-size: 10pt; float: right;' ng-click="main.notLoggedInClick()" ng-hide='main.isLoggedIn()'>{{item.attendence + ' Going'}}</button>
+              <p>{{item.snippet_text}}</p>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+    setTimeout(function() {
+      if ($('.search-box').val() != null) {
+        $('.search-submit').click();
+      }
+    }, 20);
+
+    $(document).keypress(function(event) {
+      var keycode = (event.keyCode ? event.keyCode : event.which);
+      if (keycode == '13') {
+        $('.search-submit').click();
+      }
+    });
+  });
+</script>
